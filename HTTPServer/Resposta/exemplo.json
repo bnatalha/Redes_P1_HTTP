@@ -1,0 +1,17 @@
+/* exemplo de resposta do servidor do */
+{
+  "data" : "2018-09-14T07:46:36.000Z",
+  "id": "123",
+  "pedido":[
+    {
+      "item": "Tapioca Queijo Carne"
+    }
+    {
+      "item": "Suco Laranja"
+    }
+    {
+      "item": "Pastilha"
+    }
+  ],
+  "valor" : "12.00"
+}

@@ -1,0 +1,14 @@
+/*  exemplo de POST de pedido para o servidor */
+{
+  "pedido":[
+    {
+      "item": "Tapioca Queijo Carne"
+    }
+    {
+      "item": "Suco Laranja"
+    }
+    {
+      "item": "Pastilha"
+    }
+  ]
+}
