@@ -8,6 +8,7 @@ client = http.client.HTTPConnection("localhost", 8000)
 def enviar_pedido(pedido):
     pedidojson = json.dumps(pedido)
     client.request("POST", "", body=pedidojson, headers={"Content-Type":"application/json", })
+    print("client:" + str(type(pedidojson)))
     response = json.load(client.getresponse().read())
     return response
 
@@ -40,7 +41,8 @@ if __name__ == '__main__':
             print(pedido)
             confirma = input("Confirmar pedido? s/n")
             if (confirma == 's'):
-                enviar_pedido(pedido)
+                responseX = enviar_pedido(pedido) #modified
+                print(responseX) #modified
             else:
                 print("Pedido cancelado.")
         elif (opcao == '2'):
