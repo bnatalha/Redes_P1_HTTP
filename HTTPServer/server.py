@@ -49,7 +49,7 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         return
 
     def do_UPDATE(self):
-        # TODO: atualizar o pedido para pronto, remover do discionario andamento
+        # TODO: atualizar o pedido para pronto, remover do dicionario andamento
         return
 
     def formatError():
