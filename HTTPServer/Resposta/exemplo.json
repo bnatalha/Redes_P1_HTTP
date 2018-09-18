@@ -1,0 +1,16 @@
+/* exemplo de resposta do servidor do */
+{
+  "id": "123",
+  "pedido":[
+    {
+      "item": "Tapioca Queijo Carne"
+    }
+    {
+      "item": "Suco Laranja"
+    }
+    {
+      "item": "Pastilha"
+    }
+  ],
+  "valor" : "12.00"
+}
