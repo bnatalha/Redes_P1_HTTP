@@ -27,14 +27,19 @@ def fazer_pedido(pedido):
 class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         #Testando a leitura de um post, printando o resultado no terminal
-        pedido = json.load(self.rfile.read())
+        #pedido = json.load(self.rfile.read())
+        rfile_str = self.rfile.read(4) #tem q dá um jeito de ler ate o fimsabendo q não vai ter EOF
+        print(rfile_str) #dá erro pq rfile_str está imcompleto (4 primeiros caracteres)
+        pedido = json.loads(rfile_str)
+        print("server:" + str(type(pedido)))
         resposta = fazer_pedido(pedido)
         if resposta:
             self.send_response(201)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
             jstring = json.dumps(resposta)
-            self.wfile.write(jstring.enconde("utf-8"))
+            #self.wfile.write(jstring.enconde("utf-8"))
+            self.wfile.write(jstring)
             return
         else:
             formatError()
