@@ -1,36 +1,19 @@
 import http.server
 import argparse
 import json
+from pedidos import Pedidos
 # Python 3.7 é a mais nova versão, simplificou bastante a maneira de fazer o httpServer.
 # Não encontrei nenhum exemplo que realmente fizesse uso das funcionalidades dessa versão
 # Os que encontrei utilizam outras bibliotecas para fazer o tratamento das requests como re e cgi
 # Porem não é necessario na versão atual(3.7) e demorei um pouquinho para perceber isso :p
 
-# Lista de todos os pedidos
-pedidos = []
-# Ex: ["torrada", "suco", "tapioca"]
-
-# Dicionario de pedidos em andamento
-andamento = {}
-# Ex: {1 : "torrada", 3:""tapioca", }
-
-# Dicionario de pedidos prontos
-prontos = {}
-#EX: {2 :"suco"}
-
-def fazer_pedido(pedido):
-    # TODO: if pedido invalido return False
-    print(pedido)
-    return pedido
-
-
+pedidos = Pedidos()
 class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         #Testando a leitura de um post, printando o resultado no terminal
-        print(self.headers["Content-Lenght"])
         pedidoj = self.rfile.read(int(self.headers["Content-Lenght"]))
         pedido = json.loads(pedidoj)
-        resposta = fazer_pedido(pedido)
+        resposta = pedidos.fazer_pedido(pedido)
         if resposta:
             self.send_response(201)
             self.send_header("Content-Type", "application/json")
@@ -46,7 +29,7 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
-        resposta = json.dumps(andamento)
+        resposta = json.dumps(pedidos.pedidos)
         self.wfile.write(resposta.encode("utf-8"))
         return
 

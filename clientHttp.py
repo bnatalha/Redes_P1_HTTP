@@ -8,13 +8,21 @@ client = http.client.HTTPConnection("localhost", 8000)
 def enviar_pedido(pedido):
     pedidojson = json.dumps(pedido)
     pe = pedidojson.encode("utf-8")
-    print(len(pe))
     client.request("POST", "", body=pe,
                     headers={   "Content-Type":"application/json",
                                 "Content-Lenght":len(pe)
                                 })
     response = json.load(client.getresponse())
-    return response
+    print("")
+    print("Pedido realizado com sucesso.")
+    print("")
+    print("Id do Pedido: {}".format(response[0]))
+    print("Itens:")
+    for item in response[1]:
+        print("\t{}, R${}".format(item[0], item[1]))
+    print()
+    print("Valor Total: R${}\n".format(response[2]))
+    return response[0]
 
 def gerar_pedido():
     pedido = []
@@ -29,7 +37,7 @@ def gerar_pedido():
 def acompanhar_pedido():
     while True:
         client.request(method = "GET", url = "")
-        response = json.load(client.getresponse())
+        response = client.getresponse().read()
         print(response)
         time.sleep(5)
 
@@ -43,9 +51,9 @@ if __name__ == '__main__':
         if (opcao == '1'):
             pedido = gerar_pedido()
             print(pedido)
-            confirma = input("Confirmar pedido? s/n")
+            confirma = input("Confirmar pedido? s/n\n")
             if (confirma == 's'):
-                print(enviar_pedido(pedido))
+                enviar_pedido(pedido)
             else:
                 print("Pedido cancelado.")
         elif (opcao == '2'):
