@@ -27,14 +27,16 @@ def fazer_pedido(pedido):
 class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         #Testando a leitura de um post, printando o resultado no terminal
-        pedido = json.load(self.rfile.read())
+        print(self.headers["Content-Lenght"])
+        pedidoj = self.rfile.read(int(self.headers["Content-Lenght"]))
+        pedido = json.loads(pedidoj)
         resposta = fazer_pedido(pedido)
         if resposta:
             self.send_response(201)
             self.send_header("Content-Type", "application/json")
             self.end_headers()
             jstring = json.dumps(resposta)
-            self.wfile.write(jstring.enconde("utf-8"))
+            self.wfile.write(jstring.encode("utf-8"))
             return
         else:
             formatError()
