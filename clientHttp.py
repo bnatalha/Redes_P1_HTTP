@@ -3,7 +3,7 @@ import http.client
 import json
 import time
 
-client = http.client.HTTPConnection("localhost", 8000)
+client = http.client.HTTPConnection("192.168.56.1", 8000)
 
 def enviar_pedido(pedido):
     pedidojson = json.dumps(pedido)
@@ -39,24 +39,19 @@ def acompanhar_pedido(id):
     try:
         while True:
             client.request(method = "GET", url = "/pedido/" + str(id))
-            response = client.getresponse().read()
-            print(response)
+            response = json.loads(client.getresponse().read())
+            if (response[3] == "pronto"):
+                print("Pedido {} está pronto".format(id))
+                break
             time.sleep(5)
     except KeyboardInterrupt:
         return
-
-def update_pedido():
-    client.request(method = "UPDATE", url = "", body = "")
-    response = client.getresponse().read()
-    print(response)
-    return
 
 if __name__ == '__main__':
     while True:
         print("Digite:")
         print("- 1 Para realizar um pedido")
         print("- 2 Para acompanhar um pedido")
-        print("- 3 Para indicar que o pedido esta pronto")
         print("- 0 Para sair")
         opcao = input("")
         print ()
@@ -75,8 +70,6 @@ if __name__ == '__main__':
         elif (opcao == '2'):
             id = input("Digite a id do pedido: ")
             acompanhar_pedido(id)
-        elif (opcao == '3'):
-            update_pedido()
         elif (opcao == '0'):
             break
         else:

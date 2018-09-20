@@ -42,7 +42,7 @@ class Pedidos():
 
     def update_pedido(self, pedido_id):
         for id in self.andamento:
-            if(id == pedido_id):
+            if (id == pedido_id):
                 self.prontos.append(id)
                 self.andamento.remove(id)
                 return True

@@ -3,81 +3,70 @@ import http.client
 import json
 import time
 
-client = http.client.HTTPConnection("localhost", 8000)
+client = http.client.HTTPConnection("192.168.56.1", 8000)
 
-def enviar_pedido(pedido):
-    pedidojson = json.dumps(pedido)
-    pe = pedidojson.encode("utf-8")
-    client.request("POST", "", body=pe,
-                    headers={   "Content-Type":"application/json",
-                                "Content-Lenght":len(pe)
-                                })
-    response = json.load(client.getresponse())
-    print("")
-    print("Pedido realizado com sucesso.")
-    print("")
+def update_pedido(id):
+    client.request(method = "UPDATE", url = ("/pedido/" + str(id)), body = "")
+    response = (client.getresponse().getcode())
+    print("Resposta do servidor: {}".format(response))
+    return
+
+def verificar_todos():
+    client.request(method = "GET", url = "/pedidos/todos")
+    response = json.loads(client.getresponse().read())
+    for pedido in response:
+        print("Id do Pedido: {}".format(pedido[0]))
+        print("Itens:")
+        for item in pedido[1]:
+            print("\t{}, R${}".format(item[0], item[1]))
+        print()
+        print("Valor Total: R${}\n".format(pedido[2]))
+        print()
+
+def verificar_prontos():
+    client.request(method = "GET", url = "/pedidos/prontos")
+    response = json.loads(client.getresponse().read())
+    print("Pedidos Prontos: {}".format(response))
+
+def verificar_andamento():
+    client.request(method = "GET", url = "/pedidos/andamento")
+    response = json.loads(client.getresponse().read())
+    print("Pedidos em andamento: {}".format(response))
+
+def acompanhar_pedido(id):
+    client.request(method = "GET", url = "/pedido/" + str(id))
+    response = json.loads(client.getresponse().read())
     print("Id do Pedido: {}".format(response[0]))
     print("Itens:")
     for item in response[1]:
         print("\t{}, R${}".format(item[0], item[1]))
     print()
     print("Valor Total: R${}\n".format(response[2]))
-    return response[0]
-
-def gerar_pedido():
-    pedido = []
-    print("Digite os itens do seu pedido, ao finalizar digite 0")
-    while True:
-        item = input("Item: ")
-        if item == '0':
-            break
-        pedido.append(item)
-    return pedido
-
-def acompanhar_pedido(id):
-    print("Aperte Ctrl+C para voltar ao menu.")
-    try:
-        while True:
-            client.request(method = "GET", url = "/pedido/" + str(id))
-            response = client.getresponse().read()
-            print(response)
-            time.sleep(5)
-    except KeyboardInterrupt:
-        return
-
-def update_pedido():
-    client.request(method = "UPDATE", url = "", body = "")
-    response = client.getresponse().read()
-    print(response)
+    print("Status: {}".format(response[3]))
+    print()
     return
 
 if __name__ == '__main__':
     while True:
         print("Digite:")
-        print("- 1 Para realizar um pedido")
-        print("- 2 Para acompanhar um pedido")
-        print("- 3 Para indicar que o pedido esta pronto")
+        print("- 1 Para verificar todos os pedidos realizados")
+        print("- 2 Para verificar os pedidos em andamento")
+        print("- 3 Para verificar os pedidos prontos")
+        print("- 4 Para informar que um pedido está pronto")
         print("- 0 Para sair")
         opcao = input("")
         print ()
         if (opcao == '1'):
-            pedido = gerar_pedido()
-            print(pedido)
-            confirma = input("Confirmar pedido? s/n\n")
-            if (confirma == 's'):
-                id = enviar_pedido(pedido)
-                print()
-                print("Deseja acompanhar o pedido e ser notificado quando estiver pronto? s/n")
-                a = input()
-                if a == 's':
-                    acompanhar_pedido(id)
-            else:
-                print("Pedido cancelado.")
+            verificar_todos()
+
         elif (opcao == '2'):
-            acompanhar_pedido()
+            verificar_andamento()
         elif (opcao == '3'):
-            update_pedido()
-        elif (opcao == '0'):
+            verificar_prontos()
+        elif(opcao == '4'):
+            id = input("Digite o id do pedido: ")
+            update_pedido(id)
+        elif(opcao == '0'):
             break
         else:
             print("Opcao invalida")

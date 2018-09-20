@@ -27,7 +27,6 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
 
     def do_GET(self):
         url = self.path.split('/')
-        print(url)
         if (url[1] == 'pedido'):
             id = int(url[2])
             if (id > len(pedidos.pedidos)):
@@ -78,8 +77,8 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
-        resposta = json.dumps(pedidos.prontos)
-        self.wfile.write(resposta.encode("utf-8"))
+        url = self.path.split('/')
+        pedidos.update_pedido(int(url[2]))
         return
 
     def __formatError(self, desc = ""):
