@@ -66,6 +66,7 @@ if __name__ == '__main__':
             confirma = input("Confirmar pedido? s/n\n")
             if (confirma == 's'):
                 id = enviar_pedido(pedido)
+                print()
                 print("Deseja acompanhar o pedido e ser notificado quando estiver pronto? s/n")
                 a = input()
                 if a == 's':
@@ -73,8 +74,7 @@ if __name__ == '__main__':
             else:
                 print("Pedido cancelado.")
         elif (opcao == '2'):
-            id = input("Digite a id do pedido: ")
-            acompanhar_pedido(id)
+            acompanhar_pedido()
         elif (opcao == '3'):
             update_pedido()
         elif (opcao == '0'):

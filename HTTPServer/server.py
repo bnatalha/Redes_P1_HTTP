@@ -26,21 +26,66 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             return
 
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        resposta = json.dumps(pedidos.pedidos)
-        self.wfile.write(resposta.encode("utf-8"))
+        url = self.path.split('/')
+        print(url)
+        if (url[1] == 'pedido'):
+            id = int(url[2])
+            if (id > len(pedidos.pedidos)):
+                self.__formatError("Id " + url[2] + " invalido, verifique o id do pedido.")
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            pedido = pedidos.pedidos[id - 1]
+            for item in pedidos.andamento:
+                if (item == id):
+                    pedido.append("andamento")
+                    break
+            if (pedido[-1] != "andamento"):
+                pedido.append("pronto")
+            resposta = json.dumps(pedido)
+            pedido.pop()
+            self.wfile.write(resposta.encode("utf-8"))
+
+        if (url[1] == 'pedidos'):
+            if (url[2] == 'todos'):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                resposta = json.dumps(pedidos.pedidos)
+                self.wfile.write(resposta.encode("utf-8"))
+
+            elif (url[2] == 'andamento'):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                resposta = json.dumps(pedidos.andamento)
+                self.wfile.write(resposta.encode("utf-8"))
+
+            elif (url[2] == 'prontos'):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                resposta = json.dumps(pedidos.prontos)
+                self.wfile.write(resposta.encode("utf-8"))
+            else:
+                self.__formatError()
+                return
         return
 
     def do_UPDATE(self):
         # TODO: atualizar o pedido para pronto, remover do dicionario andamento
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        resposta = json.dumps(pedidos.prontos)
+        self.wfile.write(resposta.encode("utf-8"))
         return
 
-    def formatError():
+    def __formatError(self, desc = ""):
         self.send_response(400)
         self.end_headers()
-        self.wfile.write("Request com formato incorreto".encode('utf_8'))
+        self.wfile.write(("Request invalida: " + desc).encode('utf_8'))
         return
 
 if __name__ == '__main__':

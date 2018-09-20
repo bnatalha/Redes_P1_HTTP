@@ -13,10 +13,10 @@ class Produtos():
 class Pedidos():
     # Lista de todos os pedidos
     pedidos = []
-    # Dicionario de pedidos em andamento
+    # Lista de pedidos em andamento
     andamento = []
     # Ex: [3,4]
-    # Dicionario de pedidos prontos
+    # Lista de pedidos prontos
     prontos = []
     #EX: [1,2]
     currentID = 1
